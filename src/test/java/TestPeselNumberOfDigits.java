@@ -2,29 +2,31 @@ import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
 import static io.restassured.RestAssured.get;
 
-public class PeselTestByCheckSum {
+public class TestPeselNumberOfDigits {
 
     /*
     test cases are generated using a equivalence partitions technique
-    in this data provider divide id via check sum:
-    valid - check sum correct
-    invalid - check sum incorrect
+    in this data provider divide id via number of digits:
+    valid - 11 digits
+    invalid - less than 11 digits
+    invalid - more than 11 digits
      */
-    @DataProvider(name = "peselValidCheckSum")
-    public Object[][] validCheckSum() {
+    @DataProvider(name = "peselNumberOfDigits")
+    public Object[][] numberOfDigits() {
         return new Object[][] {
-                //valid
-                { "92021489267", true},
-                //invalid
-                { "92021489287", false},
+                //valid - 11 digits
+                { "93033037299", true},
+                //invalid - less than 11 digits
+                { "93033037", false},
+                //invalid - more than 11 digits
+                { "930330372996", false}
         };
     }
 
-    @Test(dataProvider = "peselValidCheckSum")
-    public void testPeselInvalidSum (String pesel, boolean isValid){
+    @Test(dataProvider = "peselNumberOfDigits")
+    public void testPeselNumberOfDigits (String pesel, boolean isValid){
         int expectedStatusCode = 200;
         Response getResponse = get("https://peselvalidatorapitest.azurewebsites.net/api/Pesel?pesel=" + pesel);
         Assert.assertEquals(getResponse.statusCode(),expectedStatusCode);
@@ -35,7 +37,7 @@ public class PeselTestByCheckSum {
         }
         else {
             Assert.assertFalse(getResponse.path("isValid"));
-            Assert.assertEquals(getResponse.path("errors[0].errorMessage"), "Check sum is invalid. Check last digit.");
+            Assert.assertEquals(getResponse.path("errors[0].errorMessage"), "Invalid length. Pesel should have exactly 11 digits.");
         }
     }
 }

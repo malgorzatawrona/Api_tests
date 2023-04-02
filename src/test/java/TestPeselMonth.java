@@ -7,7 +7,7 @@ import static io.restassured.RestAssured.get;
 /*
 positive cases covered by years
  */
-public class PeselTestByMonth {
+public class TestPeselMonth {
 
     /*
     test cases are generated using a equivalence partitions technique and boundary value analyst
@@ -18,8 +18,8 @@ public class PeselTestByMonth {
 	4 after 2100 before 2200 - months number between 41-52 chosen cases 40-53
 	5 after 2200 before 2299 - months number between 61-72 chosen cases 60-73
      */
-    @DataProvider(name = "peselInvalidMonths")
-    public Object[][] invalidMonths() {
+    @DataProvider(name = "peselMonths")
+    public Object[][] months() {
         return new Object[][] {
                 //month 80
                 { "88802352025" },
@@ -44,8 +44,8 @@ public class PeselTestByMonth {
         };
     }
 
-    @Test(dataProvider = "peselInvalidMonths")
-    public void testPeselInvalidMonths (String pesel){
+    @Test(dataProvider = "peselMonths")
+    public void testPeselMonths (String pesel){
         int expectedStatusCode = 200;
         Response getResponse = get("https://peselvalidatorapitest.azurewebsites.net/api/Pesel?pesel=" + pesel);
         Assert.assertEquals(getResponse.statusCode(),expectedStatusCode);

@@ -2,32 +2,28 @@ import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
 import static io.restassured.RestAssured.get;
 
-public class peselTestByNumberOfDigits {
+public class TestPeselCheckSum {
 
     /*
     test cases are generated using a equivalence partitions technique
-    in this data provider divide id via number of digits:
-    valid - 11 digits
-    invalid - less than 11 digits
-    invalid - more than 11 digits
+    in this data provider divide id via check sum:
+    valid - check sum correct
+    invalid - check sum incorrect
      */
-    @DataProvider(name = "peselValidNumberOfDigits")
-    public Object[][] validNumberOfDigits() {
+    @DataProvider(name = "peselCheckSum")
+    public Object[][] checkSum() {
         return new Object[][] {
-                //valid - 11 digits
-                { "93033037299", true},
-                //invalid - less than 11 digits
-                { "93033037", false},
-                //invalid - more than 11 digits
-                { "930330372996", false}
+                //valid
+                { "92021489267", true},
+                //invalid
+                { "92021489287", false},
         };
     }
 
-    @Test(dataProvider = "peselValidNumberOfDigits")
-    public void testPeselInvalidNumberOfDigits (String pesel, boolean isValid){
+    @Test(dataProvider = "peselCheckSum")
+    public void testPeselCheckSum (String pesel, boolean isValid){
         int expectedStatusCode = 200;
         Response getResponse = get("https://peselvalidatorapitest.azurewebsites.net/api/Pesel?pesel=" + pesel);
         Assert.assertEquals(getResponse.statusCode(),expectedStatusCode);
@@ -38,7 +34,7 @@ public class peselTestByNumberOfDigits {
         }
         else {
             Assert.assertFalse(getResponse.path("isValid"));
-            Assert.assertEquals(getResponse.path("errors[0].errorMessage"), "Invalid length. Pesel should have exactly 11 digits.");
+            Assert.assertEquals(getResponse.path("errors[0].errorMessage"), "Check sum is invalid. Check last digit.");
         }
     }
 }

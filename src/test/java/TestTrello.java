@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 import io.restassured.response.Response;
 import static io.restassured.RestAssured.*;
 
-public class TrelloTest {
+public class TestTrello {
     String url = "https://api.trello.com/1/boards/";
     String name = "ProjektAPI";
     String key = "019520926368c84569933dde94bfe09c";

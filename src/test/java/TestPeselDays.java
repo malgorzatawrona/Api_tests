@@ -7,7 +7,7 @@ import static io.restassured.RestAssured.get;
 /*
 positive cases covered by years
  */
-public class PeselTestByDays {
+public class TestPeselDays {
 
     /*
     test cases are generated using a equivalence partitions technique and boundary value analyst
@@ -19,8 +19,8 @@ public class PeselTestByDays {
 	31 - valid for 31th days months
 	32 - always invalid
      */
-    @DataProvider(name = "peselInvalidDays")
-    public Object[][] invalidDays() {
+    @DataProvider(name = "peselDays")
+    public Object[][] days() {
         return new Object[][] {
                 //day 00
                 { "90030092149" },
@@ -35,8 +35,8 @@ public class PeselTestByDays {
         };
     }
 
-    @Test(dataProvider = "peselInvalidDays")
-    public void testPeselInvalidDays (String pesel){
+    @Test(dataProvider = "peselDays")
+    public void testPeselDays (String pesel){
         int expectedStatusCode = 200;
         Response getResponse = get("https://peselvalidatorapitest.azurewebsites.net/api/Pesel?pesel=" + pesel);
         Assert.assertEquals(getResponse.statusCode(),expectedStatusCode);

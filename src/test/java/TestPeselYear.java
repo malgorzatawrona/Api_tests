@@ -4,7 +4,7 @@ import org.testng.annotations.Test;
 import static io.restassured.RestAssured.get;
 import io.restassured.response.Response;
 
-public class PeselTestByYear {
+public class TestPeselYear {
 
     /*
     test cases are generated using a equivalence partitions technique
@@ -15,8 +15,8 @@ public class PeselTestByYear {
 	4 after 2100 before 2200
 	5 after 2200 before 2299
      */
-    @DataProvider(name = "peselValidYears")
-    public Object[][] validYears() {
+    @DataProvider(name = "peselYears")
+    public Object[][] years() {
         return new Object[][] {
                 //before 1900
                 { "88832352025" },
@@ -31,8 +31,8 @@ public class PeselTestByYear {
         };
     }
 
-    @Test(dataProvider = "peselValidYears")
-    public void testPeselValidYear (String pesel){
+    @Test(dataProvider = "peselYears")
+    public void testPeselYear (String pesel){
         int expectedStatusCode = 200;
         Response getResponse = get("https://peselvalidatorapitest.azurewebsites.net/api/Pesel?pesel=" + pesel);
         Assert.assertEquals(getResponse.statusCode(),expectedStatusCode);
